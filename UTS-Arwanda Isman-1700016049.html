@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>UTS</title>
+  <style type="text/css">
+    canvas{
+      background-color: #0e0701;
+    }
+    .identitas { 
+          position: absolute;
+          top: 20%;
+          right: 50%;
+          -webkit-transform: translate(50%, -50%);
+              transform: translate(50%, -50%);
+              transform-style: initial;
+          color:floralwhite;
+          max-width: 100%;
+          padding: 2em 3em;
+          background: rgba(100, 200, 0, 0.1);
+          font-family: sans-serif;
+        }
+        .gambar { 
+          position: absolute;
+          top: 50%;
+          right: 50%;
+          -webkit-transform: translate(50%, -50%);
+              transform: translate(50%, -50%);
+              transform-style: initial;
+          color:floralwhite;
+          max-width: 100%;
+          padding: 0.5em 2em;
+          background: rgba(100, 200, 0, 0.1);
+          font-family: sans-serif;
+        }
+
+  </style>
+</head>
+<body>
+
+  
+
+  <div class="identitas" align="center">
+        <h1>Arwanda Isman</h1>
+        <p>1700016049</p>
+        <p>Multimedia Online A</p>
+        
+    </div>
+
+    <div class="gambar">
+      <h4>Tempat Menggambar</h4>
+    </div>
+<canvas id=newCanvas  width="1400" height="400" onclick="onMouseDown(event)"></canvas>
+
+
+<script>
+
+var obj=[], objNum=300, color=['red','yellow','blue','white', 'green', 'blue', 'black', 'orange', 'navy'];
+function startApp() {
+    for(var i=0; i<objNum; i++)
+    {
+      var pos=Math.floor(Math.random()*250);
+      var speed=Math.floor(Math.random()*10)+1;
+      var clr=Math.floor(Math.random()*10);
+      obj[i]= new Sprite(5, 50, 10, color[clr], 0, pos,speed);
+    }
+   
+    myApp.start();
+}
+
+var myApp = {
+    canvas : document.createElement("canvas"),
+    start : function() {
+        this.canvas.width = 1400;
+        this.canvas.height = 250;
+        this.context = this.canvas.getContext("2d");
+        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        this.interval = setInterval(appLoop, 20);
+    },
+    clear : function() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+}
+
+function Sprite(width, height, radius, color, x, y,speed) {
+    this.width = width;
+    this.height = height;
+    this.x = x;
+    this.y = y;
+    this.radius=radius;    
+    this.speed=speed;
+    this.update = function(){
+        ctx = myApp.context;
+        ctx.fillStyle = color;
+        ctx.fillRect(this.x, this.y, this.radius, this.width, this.height);
+    }
+}
+
+function appLoop() {
+    myApp.clear();
+    for(var i=0; i<objNum;i++)
+    {
+      obj[i].x+=obj[i].speed;
+      if(obj[i].x>1400){
+         var pos=Math.floor(Math.random()*250);
+         var speed=Math.floor(Math.random()*10)+1;
+         obj[i].y=pos;
+         obj[i].x=0;
+         obj[i].speed=speed;
+      }
+      obj[i].update();
+    }    
+}
+ 
+startApp()
+var canvas1=document.getElementById('newCanvas');
+var cntx=canvas1.getContext("2d");
+
+      function onMouseDown(event)
+      {
+         var a = event.offsetX;
+         var b = event.offsetY; 
+         cntx.lineTo(a,b);   
+         cntx.lineWidth = 4;
+         cntx.strokeStyle = '#fff';
+         cntx.stroke();  
+      }   
+</script>
+
+</body>
+</html>
