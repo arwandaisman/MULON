@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <title>Game Snake</title>    
+
+    </head>
+
+    <body>
+
+
+        <canvas id="area" width="900" height="500"></canvas>
+
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+
+              
+              var area = $("#area")[0];
+              var ctx = area.getContext("2d");
+              var Width = $("#area").width();
+              var Height = $("#area").height();
+
+              var musik=new Audio();
+              musik.src="assets/musik2.mp3";
+
+              var ko=new Audio();
+              ko.src="assets/gameOver.mp3";
+
+              var lose=new Image();
+              lose.src="assets/gameOver.jpg";
+
+
+              var cw = 20;
+              var tekan ;
+              var makanan;
+              var nilai;
+              var array_ular; 
+
+              function init() {
+
+                tekan = "right";
+                ular();
+                create_makanan();
+ 
+                //nilai awal dari game
+                nilai = 0;
+
+                if (typeof  mulaiUlang != "undefined") clearInterval( mulaiUlang);
+                 mulaiUlang = setInterval(bg, 80);
+            }
+
+            init();
+              function ular() {
+                
+                var length = 3; 
+
+                array_ular = [];
+                for (var i = length - 1; i >= 0; i--) {
+                    array_ular.push({ x: i, y: 0 });
+              }
+            }
+
+              function create_makanan() {
+                makanan = {
+                  x: Math.round(Math.random() * (Width - cw) / cw),
+                  y: Math.round(Math.random() * (Height - cw) / cw)
+              };
+            }
+
+              function bg() {
+                ctx.fillStyle = "black";
+                ctx.fillRect(0, 0, Width, Height);    
+                ctx.strokeStyle = "white";
+                ctx.strokeRect(0, 0, Width, Height);
+
+                var nx = array_ular[0].x;
+                var ny = array_ular[0].y;
+                if (tekan == "right") nx++;
+                else if (tekan == "left") nx--;
+                else if (tekan == "up") ny--;
+                else if (tekan == "down") ny++;
+
+                if (nx == -1 || nx == Width / cw || ny == -1 || ny == Height / cw || tabrakan(nx, ny, array_ular))
+
+                {
+            
+            clearInterval();
+            ctx.drawImage(lose,0,0);
+            ko.play();
+            return;
+            }
+
+                
+                if(nx == makanan.x && ny == makanan.y){
+                  var ekor = { x: nx, y: ny };
+                  nilai++;
+                  create_makanan();
+                  musik.play();
+              } else {
+                  var ekor = array_ular.pop();
+                  ekor.x = nx;
+                  ekor.y = ny;
+              }
+
+              array_ular.unshift(ekor);
+
+              for (var i = 0; i < array_ular.length; i++) {
+                  var c = array_ular[i];
+                  bg_cell(c.x, c.y);
+              }
+
+              bg_cell(makanan.x, makanan.y);    
+
+                var nilai_text = "Nilai: " + nilai + "                            " + "Untuk mengaktifkan efek suara tekan spasi pada keyboard";
+                ctx.fillText(nilai_text, 5, Height - 5);
+            }
+
+            function bg_cell(x, y) {
+                ctx.fillStyle = "white";
+                ctx.fillRect(x * cw, y * cw, cw, cw);
+                ctx.strokeStyle = "blue";
+                ctx.strokeRect(x * cw, y * cw, cw, cw);
+            }
+
+            function tabrakan(x, y, array) {
+                for (var i = 0; i < array.length; i++) {
+                  if (array[i].x == x && array[i].y == y) return true;
+              }
+              return false;
+            }
+
+              $(document).keydown(function(e) {
+                var key = e.which;
+                if (key == "37" && tekan != "right") tekan = "left";
+                else if (key == "38" && tekan != "down") tekan = "up";
+                else if (key == "39" && tekan != "left") tekan = "right";
+                else if (key == "40" && tekan != "up") tekan = "down";
+            });
+            });
+
+            </script>
+
+
+        </body>
+</html>
